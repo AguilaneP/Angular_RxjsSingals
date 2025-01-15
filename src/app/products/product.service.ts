@@ -3,8 +3,6 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   BehaviorSubject,
   catchError,
-  combineLatest,
-  concatMap,
   filter,
   map,
   Observable,
@@ -31,6 +29,7 @@ export class ProductService {
   private http = inject(HttpClient);
   private errorService = inject(HttpErrorService);
   private reviewService = inject(ReviewService);
+
   selectedProductId = signal<number | undefined>(undefined);
 
   private productsResult$ = this.http.get<Product[]>(this.productsUrl).pipe(
@@ -93,6 +92,27 @@ export class ProductService {
     return throwError(() => formattedMessage);
   }
 }
+
+//BehaviorSubject example:
+
+// private productSelectedSubject = new BehaviorSubject<number | undefined>(undefined);
+// readonly productSelected$ = this.productSelectedSubject.asObservable();
+
+// readonly product$ = this.productSelected$
+//  .pipe(
+//    filter(Boolean),
+//    switchMap(id=>{
+//      const productUrl =  this.productsUrl + '/' + id;
+
+//      return this.http.get<Product>(productUrl)
+//       .pipe(
+//         switchMap(product => this.getProductWithReviews(product)),
+//         catchError(err => this.handleError(err))
+//       )
+//    })
+//  )
+
+//combinelatest example:
 
 // readonlyproduct$ = combineLatest([this.productSelected$, this.products$]).pipe(
 //   map(([selectedProductId, products]) =>
